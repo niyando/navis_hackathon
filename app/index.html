@@ -17,6 +17,10 @@
     <!-- build:js scripts/modernizr.js -->
     <script src="scripts/modernizr.js"></script>
     <!-- endbuild -->
+
+    <script src='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css' rel='stylesheet' />
+
   </head>
   <body>
     <!--[if IE]>
@@ -38,11 +42,7 @@
         <h3 class="text-muted">Navis on Map</h3>
       </div>
 
-      <div id="map">
-
-      </div>
-
-
+      <div id="map" style='height: 700px;'></div>
 
       <div class="footer">
         <p>♥ from the Ptolemy team</p>
