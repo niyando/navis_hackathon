@@ -17,12 +17,14 @@ var map = new mapboxgl.Map({
   zoom: 1.5
 });
 
+var markers = [];
+
 $(document).ready(function(){
 
   $.get('https://api.airtable.com/v0/appQy6EXyIOwI0Top/products?api_key=keyXXRCjWbcyCSC6F', function(response){
     response.records.forEach(function(product){
       products[product.id] = product.fields['Name'];
-      $('select#products').append($("<option></option>").attr("value",product.id).text(product.fields['Name']));
+      $('select#products,select#filter').append($('<option></option>').attr('value',product.id).text(product.fields['Name']));
     })
   });
 
@@ -62,11 +64,28 @@ $(document).ready(function(){
     console.log(lat,lng)
     if(lat && lng){
       var marker = new mapboxgl.Marker().setLngLat([lng, lat]);
+      markers.push(marker);
       var popup = new mapboxgl.Popup({ offset: 35 }).setHTML(
-        "<p>"+customer.fields['Customer Name']+"</p><p>("+products[customer.fields['Product'][0]]+")</p>"
+        '<p>'+customer.fields['Customer Name']+'</p><p>('+products[customer.fields['Product'][0]]+')</p>'
         );
       marker.setPopup(popup).addTo(map);
     }
+  }
+
+  $('select#filter').on('change',function(){
+    var filter = $(this).val();
+    if(filter){clearMarkers();}
+    $.get('https://api.airtable.com/v0/appQy6EXyIOwI0Top/customers?api_key=keyXXRCjWbcyCSC6F', function(response){
+      response.records.forEach(function(customer){
+        if(filter == 1 || customer.fields['Product'][0] == filter){plotCustomerOnMap(customer)}
+      })
+    });
+  })
+
+  function clearMarkers(){
+    markers.forEach(function(m){
+      m.remove();
+    })
   }
 
 });
