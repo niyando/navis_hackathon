@@ -82,6 +82,7 @@ $(document).ready(function(){
         );
       marker.setPopup(popup).addTo(map);
     }
+    map.zoomTo(1.5, { duration: 1000 });
   }
 
   $('select#filter').on('change',function(){
