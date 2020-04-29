@@ -61,8 +61,11 @@ $(document).ready(function(){
   function plotCustomerOnMap(customer){
     var lat = customer.fields['Latitude'];
     var lng = customer.fields['Longitude'];
-    console.log(lat,lng)
-    if(lat && lng){
+    var address = customer.fields['Address'];
+    if((!lat || !lng) && address.length > 0 ){
+      plotUsingGeoCode(customer);
+    }
+    else if(lat && lng){
       var marker = new mapboxgl.Marker().setLngLat([lng, lat]);
       markers.push(marker);
       var popup = new mapboxgl.Popup({ offset: 35 }).setHTML(
@@ -86,6 +89,18 @@ $(document).ready(function(){
     markers.forEach(function(m){
       m.remove();
     })
+  }
+
+  function plotUsingGeoCode(customer){
+    $.get("https://api.mapbox.com/geocoding/v5/mapbox.places/"+encodeURI(customer.fields['Address'])+".json?access_token=pk.eyJ1Ijoibml5YW5kbyIsImEiOiJjazlsMzA1MGowMGxsM2ZwOWRtYjlrcDluIn0.DhI3gk3OvRvtA2vMRbOz0g", function(response){
+      var center = response.features[0]['center'];
+      var marker = new mapboxgl.Marker().setLngLat([center[0], center[1]]);
+      markers.push(marker);
+      var popup = new mapboxgl.Popup({ offset: 35 }).setHTML(
+        '<p>'+customer.fields['Customer Name']+'</p><p>('+products[customer.fields['Product'][0]]+')</p>'
+        );
+      marker.setPopup(popup).addTo(map);
+    });
   }
 
 });
