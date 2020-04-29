@@ -29,13 +29,14 @@ $(document).ready(function(){
       };
       $('select#products,select#filter').append($('<option></option>').attr('value',product.id).text(product.fields['Name']));
     })
+
+    $.get('https://api.airtable.com/v0/appQy6EXyIOwI0Top/customers?api_key=keyXXRCjWbcyCSC6F', function(response){
+      response.records.forEach(function(customer){
+        plotCustomerOnMap(customer)
+      })
+    });
   });
 
-  $.get('https://api.airtable.com/v0/appQy6EXyIOwI0Top/customers?api_key=keyXXRCjWbcyCSC6F', function(response){
-    response.records.forEach(function(customer){
-      plotCustomerOnMap(customer)
-    })
-  });
 
   $('form#customerForm').on('submit', function(e){
     e.preventDefault();
