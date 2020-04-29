@@ -72,7 +72,7 @@ $(document).ready(function(){
     el.style.height = '20px'
 
     if((!lat || !lng) && address.length > 0 ){
-      plotUsingGeoCode(customer);
+      plotUsingGeoCode(customer, el);
     }
     else if(lat && lng){
       var marker = new mapboxgl.Marker(el).setLngLat([lng, lat]);
@@ -100,10 +100,10 @@ $(document).ready(function(){
     })
   }
 
-  function plotUsingGeoCode(customer){
+  function plotUsingGeoCode(customer, el){
     $.get("https://api.mapbox.com/geocoding/v5/mapbox.places/"+encodeURI(customer.fields['Address'])+".json?access_token=pk.eyJ1Ijoibml5YW5kbyIsImEiOiJjazlsMzA1MGowMGxsM2ZwOWRtYjlrcDluIn0.DhI3gk3OvRvtA2vMRbOz0g", function(response){
       var center = response.features[0]['center'];
-      var marker = new mapboxgl.Marker().setLngLat([center[0], center[1]]);
+      var marker = new mapboxgl.Marker(el).setLngLat([center[0], center[1]]);
       markers.push(marker);
       var popup = new mapboxgl.Popup({ offset: 10 }).setHTML(
         '<p>'+customer.fields['Customer Name']+'</p><p>('+products[customer.fields['Product'][0]].name+')</p>'
