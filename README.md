@@ -1,3 +1,4 @@
+- Run `npm install` to download all dependencies
 - Run `npm start` to preview and watch for changes
 - Run `npm install --save <package>` to install dependencies, frontend included
 - Run `npm build` to build your webapp for production
