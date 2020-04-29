@@ -77,7 +77,7 @@ $(document).ready(function(){
       var marker = new mapboxgl.Marker(el).setLngLat([lng, lat]);
       markers.push(marker);
       var popup = new mapboxgl.Popup({ offset: 35 }).setHTML(
-        '<p>'+customer.fields['Customer Name']+'</p><p>('+products[customer.fields['Product'][0]]+')</p>'
+        '<p>'+customer.fields['Customer Name']+'</p><p>('+products[customer.fields['Product'][0]].name+')</p>'
         );
       marker.setPopup(popup).addTo(map);
     }
@@ -105,7 +105,7 @@ $(document).ready(function(){
       var marker = new mapboxgl.Marker().setLngLat([center[0], center[1]]);
       markers.push(marker);
       var popup = new mapboxgl.Popup({ offset: 35 }).setHTML(
-        '<p>'+customer.fields['Customer Name']+'</p><p>('+products[customer.fields['Product'][0]]+')</p>'
+        '<p>'+customer.fields['Customer Name']+'</p><p>('+products[customer.fields['Product'][0]].name+')</p>'
         );
       marker.setPopup(popup).addTo(map);
     });
