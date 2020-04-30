@@ -79,8 +79,9 @@ $(document).ready(function(){
     else if(lat && lng){
       var marker = new mapboxgl.Marker(el).setLngLat([lng, lat]);
       markers.push(marker);
+      const productName = customer.fields['Product'] ? products[customer.fields['Product'][0]].name: 'Office'
       var popup = new mapboxgl.Popup({ offset: 10 }).setHTML(
-        '<p class="bold">'+customer.fields['Customer Name']+'<br><span class="text-muted">'+products[customer.fields['Product'][0]].name+'</span></p>'
+        '<p class="bold">'+customer.fields['Customer Name']+'<br><span class="text-muted">'+productName+'</span></p>'
         );
       marker.setPopup(popup).addTo(map);
     }
