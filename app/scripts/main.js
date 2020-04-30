@@ -70,7 +70,14 @@ $(document).ready(function(){
     var address = customer.fields['Address'];
     var el = document.createElement('div');
     el.className = 'marker';
-    const backgroundImage = customer.fields['Product'] ? products[customer.fields['Product'][0]].icon : products[DEFAULT_LOCATION_ID].icon;
+    let backgroundImage;
+    if (customer.fields['Icon']) {
+      backgroundImage = customer.fields['Icon'][0].thumbnails.small.url;
+    } else if (customer.fields['Product']) {
+      backgroundImage = products[customer.fields['Product'][0]].icon
+    } else {
+      backgroundImage = products[DEFAULT_LOCATION_ID].icon
+    }
     el.style.backgroundImage = `url(${backgroundImage})`
 
     if((!lat || !lng) && address.length > 0 ){
