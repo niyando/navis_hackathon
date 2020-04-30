@@ -20,10 +20,13 @@ var map = new mapboxgl.Map({
 var markers = [];
 
 const getPopup = function ({ customer, product }) {
+  const productName = product
+  ? product.name
+  : "Office";
   return new mapboxgl.Popup({ offset: 10 }).setHTML(
     `<p class="mt-3">
       <strong>${customer["Customer Name"]}</strong><br>
-      <strong>Product:</strong>  ${product} <br>
+      <strong>Product:</strong> <a href="${product.link}">${productName}</a><br>
       <strong>Client/Office:</strong>  ${customer["Location Type"]} <br>
       <strong>Navis org unit:</strong> ${customer["Org unit"]}
     </p>`
@@ -38,6 +41,7 @@ $(document).ready(function () {
         products[product.id] = {
           name: product.fields["Name"],
           icon: product.fields["Product Icon"][0]["thumbnails"]["small"]["url"],
+          link: product.fields['Link']
         };
         $("select#products,select#filter").append(
           $("<option></option>")
@@ -89,13 +93,22 @@ $(document).ready(function () {
     var el = document.createElement("div");
     el.className = "marker";
     let backgroundImage;
+    let productUrl;
+    const productId = _.get(customer , 'fields.Product.0')
+    const product = _.get(products, productId)
+
     if (customer.fields["Icon"]) {
       backgroundImage = customer.fields["Icon"][0].thumbnails.small.url;
-    } else if (customer.fields["Product"]) {
-      backgroundImage = products[customer.fields["Product"][0]].icon;
+    } else if (productId) {
+      backgroundImage = product.icon;
     } else {
       backgroundImage = products[DEFAULT_LOCATION_ID].icon;
     }
+
+    if (productId && _.get(product, 'link')) {
+      productUrl = product.link
+    }
+
     el.style.backgroundImage = `url(${backgroundImage})`;
 
     if ((!lat || !lng) && address.length > 0) {
@@ -103,12 +116,10 @@ $(document).ready(function () {
     } else if (lat && lng) {
       var marker = new mapboxgl.Marker(el).setLngLat([lng, lat]);
       markers.push(marker);
-      const productName = customer.fields["Product"]
-        ? products[customer.fields["Product"][0]].name
-        : "Office";
+
       var popup = getPopup({
         customer: customer.fields,
-        product: productName,
+        product,
       });
       marker.setPopup(popup).addTo(map);
     }
