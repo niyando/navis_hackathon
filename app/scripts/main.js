@@ -110,7 +110,7 @@ $(document).ready(function(){
         var center = response.features[0]['center'];
         var marker = new mapboxgl.Marker(el).setLngLat([center[0], center[1]]);
         markers.push(marker);
-        const productName = customer.fields['Product'] ? products[customer.fields['Product'][0]].name : 'Default';
+        const productName = customer.fields['Product'] ? products[customer.fields['Product'][0]].name : 'Office';
         var popup = new mapboxgl.Popup({ offset: 10 }).setHTML(
           '<p class="bold">' + customer.fields['Customer Name'] + '<br><span class="text-muted">' + productName + '</span></p>'
         );
