@@ -93,7 +93,7 @@ $(document).ready(function(){
     if(filter){clearMarkers();}
     $.get('https://api.airtable.com/v0/appQy6EXyIOwI0Top/customers?api_key=keyXXRCjWbcyCSC6F', function(response){
       response.records.forEach(function(customer){
-        if(filter == 1 || customer.fields['Product'][0] == filter){plotCustomerOnMap(customer)}
+        if(filter == 1 || (customer.fields['Product'] && customer.fields['Product'][0] == filter)){plotCustomerOnMap(customer)}
       })
     });
   })
