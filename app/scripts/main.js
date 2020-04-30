@@ -69,10 +69,9 @@ $(document).ready(function(){
     var lng = customer.fields['Longitude'];
     var address = customer.fields['Address'];
     var el = document.createElement('div');
+    el.className = 'marker';
     const backgroundImage = customer.fields['Product'] ? products[customer.fields['Product'][0]].icon : products[DEFAULT_LOCATION_ID].icon;
     el.style.backgroundImage = `url(${backgroundImage})`
-    el.style.width = '20px'
-    el.style.height = '20px'
 
     if((!lat || !lng) && address.length > 0 ){
       plotUsingGeoCode(customer, el);
