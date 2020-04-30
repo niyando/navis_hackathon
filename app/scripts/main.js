@@ -7,9 +7,11 @@
 // https://getbootstrap.com/docs/4.0/components/popovers/#example-enable-popovers-everywhere
 // $(function () { $('[data-toggle="popover"]').popover(); });
 
+var DEFAULT_LOCATION_ID = 'rece0kxEDy19uw04K';
 var products = {};
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoibml5YW5kbyIsImEiOiJjazlsMzA1MGowMGxsM2ZwOWRtYjlrcDluIn0.DhI3gk3OvRvtA2vMRbOz0g';
+
 
 var map = new mapboxgl.Map({
   container: 'map',
@@ -67,7 +69,8 @@ $(document).ready(function(){
     var lng = customer.fields['Longitude'];
     var address = customer.fields['Address'];
     var el = document.createElement('div');
-    el.style.backgroundImage = `url(${products[customer.fields['Product'][0]].icon})`
+    const backgroundImage = customer.fields['Product'] ? products[customer.fields['Product'][0]].icon : products[DEFAULT_LOCATION_ID].icon;
+    el.style.backgroundImage = `url(${backgroundImage})`
     el.style.width = '20px'
     el.style.height = '20px'
 
@@ -101,16 +104,22 @@ $(document).ready(function(){
     })
   }
 
-  function plotUsingGeoCode(customer, el){
-    $.get('https://api.mapbox.com/geocoding/v5/mapbox.places/'+encodeURI(customer.fields['Address'])+'.json?access_token=pk.eyJ1Ijoibml5YW5kbyIsImEiOiJjazlsMzA1MGowMGxsM2ZwOWRtYjlrcDluIn0.DhI3gk3OvRvtA2vMRbOz0g', function(response){
-      var center = response.features[0]['center'];
-      var marker = new mapboxgl.Marker(el).setLngLat([center[0], center[1]]);
-      markers.push(marker);
-      var popup = new mapboxgl.Popup({ offset: 10 }).setHTML(
-        '<p class="bold">'+customer.fields['Customer Name']+'<br><span class="text-muted">'+products[customer.fields['Product'][0]].name+'</span></p>'
+  function plotUsingGeoCode(customer, el) {
+    $.get('https://api.mapbox.com/geocoding/v5/mapbox.places/' + encodeURI(customer.fields['Address']) + '.json?access_token=pk.eyJ1Ijoibml5YW5kbyIsImEiOiJjazlsMzA1MGowMGxsM2ZwOWRtYjlrcDluIn0.DhI3gk3OvRvtA2vMRbOz0g', function (response) {
+      if (response.features.length > 0) {
+        var center = response.features[0]['center'];
+        var marker = new mapboxgl.Marker(el).setLngLat([center[0], center[1]]);
+        markers.push(marker);
+        const productName = customer.fields['Product'] ? products[customer.fields['Product'][0]].name : 'Default';
+        var popup = new mapboxgl.Popup({ offset: 10 }).setHTML(
+          '<p class="bold">' + customer.fields['Customer Name'] + '<br><span class="text-muted">' + productName + '</span></p>'
         );
-      marker.setPopup(popup).addTo(map);
-    });
+        marker.setPopup(popup).addTo(map);
+      } else {
+        console.log('Not able to lookup', customer)
+      }
+      });
+
   }
 
 });
