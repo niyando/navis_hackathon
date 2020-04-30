@@ -20,16 +20,14 @@ var map = new mapboxgl.Map({
 var markers = [];
 
 const getPopup = function ({ customer, product }) {
-  const productName = product
-  ? product.name
-  : "Office";
-  const productText = product && product.link ? `<a href="${product.link}">${productName}</a>` : productName
-
+  const productText = product
+    ? `<strong>Product:</strong> <a href="${product.link}">${product.name}</a> <br>`
+    : "";
   return new mapboxgl.Popup({ offset: 10 }).setHTML(
     `<p class="mt-3">
       <strong>${customer["Customer Name"]}</strong><br>
-      <strong>Product:</strong> ${productText}<br>
-      <strong>Client/Office:</strong>  ${customer["Location Type"]} <br>
+      ${productText}
+      <strong>Location Type:</strong>  ${customer["Location Type"]} <br>
     </p>`
   );
 };
@@ -43,7 +41,7 @@ $(document).ready(function () {
         products[product.id] = {
           name: product.fields["Name"],
           icon: product.fields["Product Icon"][0]["thumbnails"]["small"]["url"],
-          link: product.fields['Link']
+          link: product.fields["Link"],
         };
         $("select#products,select#filter").append(
           $("<option></option>")
@@ -97,8 +95,8 @@ $(document).ready(function () {
     var el = document.createElement("div");
     el.className = "marker";
     let backgroundImage;
-    const productId = _.get(customer, 'fields.Product.0')
-    const product = _.get(products, productId)
+    const productId = _.get(customer, "fields.Product.0");
+    const product = _.get(products, productId);
 
     if (customer.fields["Icon"]) {
       backgroundImage = customer.fields["Icon"][0].thumbnails.small.url;
@@ -168,8 +166,8 @@ $(document).ready(function () {
           ]);
           markers.push(marker);
 
-          const productId = _.get(customer, 'fields.Product.0')
-          const product = _.get(products, productId)
+          const productId = _.get(customer, "fields.Product.0");
+          const product = _.get(products, productId);
 
           var popup = getPopup({
             customer: customer.fields,
