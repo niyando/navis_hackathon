@@ -9,3 +9,6 @@ bower_components
 # System Files
 .DS_Store
 Thumbs.db
+
+# api keys
+/app/scripts/env_constants.js
