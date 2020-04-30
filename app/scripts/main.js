@@ -24,15 +24,15 @@ const getPopup = function ({ customer, product }) {
     `<p class="mt-3">
       <strong>${customer["Customer Name"]}</strong><br>
       <strong>Product:</strong>  ${product} <br>
-      <strong>Client/Office:</strong>  ${customer["Location Type"]} <br>
-      <strong>Navis org unit:</strong> ${customer["Org unit"]}
+      <strong>Client/Office:</strong>  ${customer["Location Type"]}
     </p>`
   );
 };
 
 $(document).ready(function () {
   $.get(
-    "https://api.airtable.com/v0/appQy6EXyIOwI0Top/products?api_key="+api_keys.airtable,
+    "https://api.airtable.com/v0/appQy6EXyIOwI0Top/products?api_key=" +
+      api_keys.airtable,
     function (response) {
       response.records.forEach(function (product) {
         products[product.id] = {
@@ -47,7 +47,8 @@ $(document).ready(function () {
       });
 
       $.get(
-        "https://api.airtable.com/v0/appQy6EXyIOwI0Top/customers?api_key="+api_keys.airtable,
+        "https://api.airtable.com/v0/appQy6EXyIOwI0Top/customers?api_key=" +
+          api_keys.airtable,
         function (response) {
           response.records.forEach(function (customer) {
             plotCustomerOnMap(customer);
@@ -66,12 +67,13 @@ $(document).ready(function () {
     customer["fields"]["Longitude"] = $("input#customer_lng").val();
     customer["fields"]["Product"] = [$("select#products").val()];
     customer["fields"]["Address"] = $("input#customer_address").val();
+    customer["fields"]["Location Type"] = $("select#loc_type").val();
 
     $.ajax({
       url: "https://api.airtable.com/v0/appQy6EXyIOwI0Top/customers",
       type: "POST",
       beforeSend: function (xhr) {
-        xhr.setRequestHeader("Authorization", "Bearer "+api_keys.airtable);
+        xhr.setRequestHeader("Authorization", "Bearer " + api_keys.airtable);
       },
       data: { records: [customer] },
       success: function (r) {
@@ -121,7 +123,8 @@ $(document).ready(function () {
       clearMarkers();
     }
     $.get(
-      "https://api.airtable.com/v0/appQy6EXyIOwI0Top/customers?api_key="+api_keys.airtable,
+      "https://api.airtable.com/v0/appQy6EXyIOwI0Top/customers?api_key=" +
+        api_keys.airtable,
       function (response) {
         response.records.forEach(function (customer) {
           if (
@@ -146,7 +149,8 @@ $(document).ready(function () {
     $.get(
       "https://api.mapbox.com/geocoding/v5/mapbox.places/" +
         encodeURI(customer.fields["Address"]) +
-        ".json?access_token="+api_keys.map_box,
+        ".json?access_token=" +
+        api_keys.map_box,
       function (response) {
         if (response.features.length > 0) {
           var center = response.features[0]["center"];

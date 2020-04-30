@@ -128,13 +128,22 @@
                 </div>
               </div>
               <div class="form-group">
+                <label for="products">Product</label>
                 <select id="products" class="custom-select" required>
+                  <option value="" selected disabled>Product</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="loc_type">Location Type</label>
+                <select id="loc_type" class="custom-select" required>
                   <option value="" selected disabled
                     >Select a Location Type</option
                   >
+                  <option value="Client">Client</option>
+                  <option value="Office">Office</option>
                 </select>
               </div>
-            </div>
+
             <div class="modal-footer">
               <button
                 type="button"
